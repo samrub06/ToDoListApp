@@ -1,10 +1,12 @@
 import { useState } from "react";
 
 const initialTasks = [
-  { id: 0, text: "Visit Kafka Museum", done: true },
-  { id: 1, text: "Watch a puppet show", done: false },
-  { id: 2, text: "Lennon Wall pic", done: false },
+  { id: 0, text: "Visit Kafka Museum", completed: true },
+  { id: 1, text: "Watch a puppet show", completed: false },
+  { id: 2, text: "Lennon Wall pic", completed: false },
 ];
+
+
 
 const App = () => {
   const [note, setNote] = useState("");
@@ -46,6 +48,13 @@ const App = () => {
     setNoteIdToEdit(null);
   };
 
+    const handleToggleComplete = (id) => {
+      const updatedTodos = todos.map((note) =>
+        note.id === id ? { ...note, completed: !note.completed } : note
+      );
+      setTodos(updatedTodos);
+    };
+
   return (
     <div>
       <h1> TO DO APP </h1>
@@ -60,15 +69,21 @@ const App = () => {
       </form>
       <ul>
         {todos?.map((note, idx) => (
-          <div key={idx}>
+          <li key={idx}>
+            <input
+              type="checkbox"
+              checked={note.completed}
+              onChange={() => {handleToggleComplete(note.id);
+              }}
+            />
             {noteIdToEdit !== note.id ? (
-              <li key={note.id}>
+              <>
                 {note.text}
                 <button onClick={() => handleEditNote(note.id)}>EDIT</button>
                 <button onClick={() => handleDeleteNote(note.id)}>
                   DELETE
                 </button>
-              </li>
+              </>
             ) : (
               <>
                 <input
@@ -79,7 +94,7 @@ const App = () => {
                 <button onClick={(e) => handleSaveNote(e)}>SAVE</button>
               </>
             )}
-          </div>
+          </li>
         ))}
       </ul>
     </div>
