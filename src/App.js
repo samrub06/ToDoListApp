@@ -1,12 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 const initialTasks = [
-  { id: 0, text: "Visit Kafka Museum", done: true },
-  { id: 1, text: "Watch a puppet show", done: false },
-  { id: 2, text: "Lennon Wall pic", done: false },
+  { id: 0, text: "Visit Kafka Museum", completed: true },
+  { id: 1, text: "Watch a puppet show", completed: false },
+  { id: 2, text: "Lennon Wall pic", completed: false },
 ];
 
-const App2 = () => {
+const App = () => {
   const [note, setNote] = useState("");
   const [todos, setTodos] = useState(initialTasks);
   const [noteIdToEdit, setNoteIdToEdit] = useState();
@@ -28,8 +28,10 @@ const App2 = () => {
 
   const handleEditNote = (id) => {
     const noteSelected = todos.find((note) => note.id === id);
-    setNoteIdToEdit(noteSelected.id);
-    setEditedNoteText(noteSelected.text);
+    if (noteSelected) {
+      setNoteIdToEdit(noteSelected.id);
+      setEditedNoteText(noteSelected.text);
+    }
   };
 
   const handleDeleteNote = (id) => {
@@ -40,10 +42,17 @@ const App2 = () => {
   const handleSaveNote = (e) => {
     e.preventDefault();
     const updatedTodos = todos.map((note) =>
-      note.id === noteIdToEdit ? { ...note, text:editedNoteText } : note
+      note.id === noteIdToEdit ? { ...note, text: editedNoteText } : note
     );
     setTodos(updatedTodos);
     setNoteIdToEdit(null);
+  };
+
+  const handleToggleComplete = (id) => {
+    const updatedTodos = todos.map((note) =>
+      note.id === id ? { ...note, completed: !note.completed } : note
+    );
+    setTodos(updatedTodos);
   };
 
   return (
@@ -51,6 +60,7 @@ const App2 = () => {
       <h1> TO DO APP </h1>
       <form>
         <input
+          name="note"
           value={note}
           onChange={(e) => {
             setNote(e.target.value);
@@ -60,18 +70,28 @@ const App2 = () => {
       </form>
       <ul>
         {todos?.map((note, idx) => (
-          <div key={idx}>
+          <li key={idx}>
+            <input
+              name="inputCheckbox"
+              type="checkbox"
+              checked={note.completed}
+              onChange={() => {
+                handleToggleComplete(note.id);
+              }}
+            />
             {noteIdToEdit !== note.id ? (
-              <li key={note.id}>
+              <>
                 {note.text}
                 <button onClick={() => handleEditNote(note.id)}>EDIT</button>
                 <button onClick={() => handleDeleteNote(note.id)}>
                   DELETE
                 </button>
-              </li>
+              </>
             ) : (
               <>
                 <input
+                  name="inputNote"
+                  id={idx}
                   value={editedNoteText}
                   onChange={(e) => setEditedNoteText(e.target.value)}
                 />
@@ -79,10 +99,11 @@ const App2 = () => {
                 <button onClick={(e) => handleSaveNote(e)}>SAVE</button>
               </>
             )}
-          </div>
+          </li>
         ))}
       </ul>
     </div>
   );
 };
-export default App2;
+
+export default App;
