@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AddTask from "./AddTask";
 
 const initialTasks = [
   { id: 0, text: "Visit Kafka Museum", completed: true },
@@ -7,15 +8,13 @@ const initialTasks = [
 ];
 
 const App = () => {
-  const [note, setNote] = useState("");
   const [todos, setTodos] = useState(initialTasks);
   const [noteIdToEdit, setNoteIdToEdit] = useState();
   const [editedNoteText, setEditedNoteText] = useState("");
 
   const nextId = todos.length;
 
-  const handleAddNote = (e) => {
-    e.preventDefault();
+  const handleAddNote = (note) => {
     const newNote = {
       id: nextId,
       text: note,
@@ -23,7 +22,6 @@ const App = () => {
       userId: 1,
     };
     setTodos([...todos, newNote]);
-    setNote("");
   };
 
   const handleEditNote = (id) => {
@@ -58,16 +56,7 @@ const App = () => {
   return (
     <div>
       <h1> TO DO APP </h1>
-      <form>
-        <input
-          name="note"
-          value={note}
-          onChange={(e) => {
-            setNote(e.target.value);
-          }}
-        />
-        <button onClick={handleAddNote}>ADD</button>
-      </form>
+      <AddTask onAddNote={handleAddNote} />
       <ul>
         {todos?.map((note, idx) => (
           <li key={idx}>
