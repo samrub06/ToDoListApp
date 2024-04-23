@@ -6,13 +6,13 @@ const initialTasks = [
   { id: 2, text: "Lennon Wall pic", done: false },
 ];
 
-const App2 = () => {
+const App = () => {
   const [note, setNote] = useState("");
   const [todos, setTodos] = useState(initialTasks);
   const [noteIdToEdit, setNoteIdToEdit] = useState();
   const [editedNoteText, setEditedNoteText] = useState("");
 
-  const nextId = todos.length;
+  const nextId = todos.length
 
   const handleAddNote = (e) => {
     e.preventDefault();
@@ -85,4 +85,4 @@ const App2 = () => {
     </div>
   );
 };
-export default App2;
+export default App;
